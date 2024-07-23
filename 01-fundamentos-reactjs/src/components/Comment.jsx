@@ -4,18 +4,18 @@ import styles from './Comment.module.css';
 export function Comment() {
     return (
         <div className={styles.comment}>
-            <img src="https://github.com/jonatas-JS.png" />
+            <img src="https://github.com/jakeliny.png" />
 
             <div className={styles.commentBox}>
                 <div className={styles.commentContent}>
                     <header>
                         <div className={styles.authorAndTime}>
-                            <strong>Diego Fernandes</strong>
+                            <strong>Jakeliny Gracielly</strong>
                             <time title="22 de Julho às 10:33h" dateTime="2024-07-22 10:33:00">Pulicado há 1h</time>
                         </div>
 
                         <button title="Deletar comentário">
-                            <Trash size={20}/>
+                            <Trash size={20} />
                         </button>
                     </header>
 
