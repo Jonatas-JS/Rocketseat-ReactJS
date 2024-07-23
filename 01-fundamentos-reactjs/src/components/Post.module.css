@@ -110,3 +110,7 @@
     font-weight: bold;
     cursor: pointer;
 }
+
+.commentList {
+    margin-top: 2rem;
+}
