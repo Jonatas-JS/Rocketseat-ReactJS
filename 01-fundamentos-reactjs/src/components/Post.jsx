@@ -11,9 +11,10 @@ import { Comment } from './Comment';
 export function Post({ author, publishedAt, content }) {
 
     const [comments, setComments] = useState([
-        1,
-        2,
+        'Muito bom Devon, parabéns!! 👏👏'
     ])
+    //newCommentText valor do campo do comentário
+    const [newCommentText, setNewCommentText] = useState('')
 
     //publishedDateFormatted vai armazenar a data do post e mostra-la já editada
     const publishedDateFormatted = format(publishedAt, "d 'de' LLLL 'às' HH:mm'h'", {
@@ -30,8 +31,16 @@ export function Post({ author, publishedAt, content }) {
         //impede o comportamento normal do coponente
         //o comportamento normal de um submit seria levar o usuário para outra página, nesse caso ele impede essa ação
         event.preventDefault()
+
         //spread operator ... copia o que tem na variável comments
-        setComments([...comments, comments.length + 1])
+        setComments([...comments, newCommentText])
+        //setNewCommentText => volta para o estado inicial, vazio
+        setNewCommentText('')
+    }
+
+    function handleNewCommentChange() {
+        //setNewCommentText => receberá o valor do que está sendo digitado no <textarea>
+        setNewCommentText(event.target.value);
     }
 
     return (
@@ -53,9 +62,9 @@ export function Post({ author, publishedAt, content }) {
             <div className={styles.content}>
                 {content.map(line => { //função para separa e mostrar o que é paragrafo e o que é link
                     if (line.type === 'paragraph') {
-                        return <p>{line.content}</p>;
+                        return <p key={Math.random()}>{line.content}</p>;
                     } else if (line.type === 'link') {
-                        return <p><a href="#">{line.content}</a></p>;
+                        return <p key={Math.random()}><a href="#">{line.content}</a></p>;
                     }
                 })}
             </div>
@@ -63,7 +72,10 @@ export function Post({ author, publishedAt, content }) {
             <form onSubmit={handleCreateNewComment} className={styles.commentForm}>
                 <strong>Deixe seu feedback</strong>
                 <textarea
+                    name="comment"
+                    value={newCommentText}
                     placeholder="Deixe seu comentário"
+                    onChange={handleNewCommentChange}
                 />
 
                 <footer>
@@ -73,7 +85,7 @@ export function Post({ author, publishedAt, content }) {
 
             <div className={styles.commentList}>
                 {comments.map(comment => {
-                    return <Comment />
+                    return <Comment key={Math.random()} content={comment}/>
                 })}
             </div>
         </article>
