@@ -12,35 +12,43 @@ export function Post({ author, publishedAt, content }) {
 
     const [comments, setComments] = useState([
         'Muito bom Devon, parabéns!! 👏👏'
-    ])
+    ]);
     //newCommentText valor do campo do comentário
-    const [newCommentText, setNewCommentText] = useState('')
+    const [newCommentText, setNewCommentText] = useState('');
 
     //publishedDateFormatted vai armazenar a data do post e mostra-la já editada
     const publishedDateFormatted = format(publishedAt, "d 'de' LLLL 'às' HH:mm'h'", {
         locale: ptBR,
-    })
+    });
 
     //publishedDateRelativeToNow vai armazenar a data de publicação do post relativa a data atual 
     const publishedDateRelativeToNow = formatDistanceToNow(publishedAt, {
         locale: ptBR,
         addSuffix: true,
-    })
+    });
 
     function handleCreateNewComment() {
         //impede o comportamento normal do coponente
         //o comportamento normal de um submit seria levar o usuário para outra página, nesse caso ele impede essa ação
-        event.preventDefault()
+        event.preventDefault();
 
         //spread operator ... copia o que tem na variável comments
-        setComments([...comments, newCommentText])
+        setComments([...comments, newCommentText]);
         //setNewCommentText => volta para o estado inicial, vazio
-        setNewCommentText('')
+        setNewCommentText('');
     }
 
     function handleNewCommentChange() {
         //setNewCommentText => receberá o valor do que está sendo digitado no <textarea>
         setNewCommentText(event.target.value);
+    }
+
+    function deleteComment(commentToDelete) {
+        const commentsWithoutDeletedOne = comments.filter(comment => {
+            //retorne uma lista com somente os comentários diferentes de comment(comentário atual) 
+            return comment !== commentToDelete
+        })
+        setComments(commentsWithoutDeletedOne);
     }
 
     return (
@@ -85,7 +93,13 @@ export function Post({ author, publishedAt, content }) {
 
             <div className={styles.commentList}>
                 {comments.map(comment => {
-                    return <Comment key={Math.random()} content={comment}/>
+                    return (
+                        <Comment
+                            key={Math.random()}
+                            content={comment}
+                            onDeleteComment={deleteComment}
+                        />
+                    )
                 })}
             </div>
         </article>
