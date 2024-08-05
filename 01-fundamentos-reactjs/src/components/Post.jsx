@@ -13,21 +13,23 @@ export function Post({ author, publishedAt, content }) {
     const [comments, setComments] = useState([
         'Muito bom Devon, parabéns!! 👏👏'
     ]);
-    //newCommentText valor do campo do comentário
+
+    //newCommentText -> value of campo do comentário in real time
     const [newCommentText, setNewCommentText] = useState('');
 
-    //publishedDateFormatted vai armazenar a data do post e mostra-la já editada
+    //publishedDateFormatted -> vai armazenar a data do post e mostra-la já editada
     const publishedDateFormatted = format(publishedAt, "d 'de' LLLL 'às' HH:mm'h'", {
         locale: ptBR,
     });
 
-    //publishedDateRelativeToNow vai armazenar a data de publicação do post relativa a data atual 
+    //publishedDateRelativeToNow -> vai armazenar a data de publicação do post relativa a data atual 
     const publishedDateRelativeToNow = formatDistanceToNow(publishedAt, {
         locale: ptBR,
         addSuffix: true,
     });
 
-    function handleCreateNewComment() {
+    //handleCreateNewComment -> criar novo comentário
+    function handleCreateNewComment(event) {
         //impede o comportamento normal do coponente
         //o comportamento normal de um submit seria levar o usuário para outra página, nesse caso ele impede essa ação
         event.preventDefault();
@@ -38,18 +40,31 @@ export function Post({ author, publishedAt, content }) {
         setNewCommentText('');
     }
 
-    function handleNewCommentChange() {
-        //setNewCommentText => receberá o valor do que está sendo digitado no <textarea>
+    //handleNewCommentChange -> recebe o texto que está sendo digitado no comentário
+    function handleNewCommentChange(event) {
+        //setCustomValidity('') -> muda para vazio, quando a pessoa digitar, já que antes apresentava o texto 'Esse campo é obrigatório'
+        event.target.setCustomValidity('')
+        //setNewCommentText ->  receberá o valor do que está sendo digitado no <textarea>
         setNewCommentText(event.target.value);
     }
 
+    //handleNewCommentInvalid -> muda o texto que é mostrado quando o campo está vazio
+    function handleNewCommentInvalid(event) {
+        //setCustomValidity -> muda o texto que é mostrado quando o campo está vazio
+        event.target.setCustomValidity('Esse campo é obrigatório')
+    }
+
+    //deleteComment -> creates a filter (new list) of $comments without  the que será "deleted"
     function deleteComment(commentToDelete) {
         const commentsWithoutDeletedOne = comments.filter(comment => {
-            //retorne uma lista com somente os comentários diferentes de comment(comentário atual) 
+            //return a list with only os comentários diferentes de comment(comentário atual) 
             return comment !== commentToDelete
         })
         setComments(commentsWithoutDeletedOne);
     }
+
+    //isNewCommentEmpty -> validar se o campo newCommentText está vazio para mudar o status do disable no Publicar button
+    const isNewCommentEmpty = newCommentText.length === 0;
 
     return (
         <article className={styles.post}>
@@ -84,10 +99,18 @@ export function Post({ author, publishedAt, content }) {
                     value={newCommentText}
                     placeholder="Deixe seu comentário"
                     onChange={handleNewCommentChange}
+                    onInvalid={handleNewCommentInvalid} //quando for invalidado (vazio) execute a função...
+                    //handleNewCommentInvalid -> feito para mudar o texto que é exibio quando <textarea> vazio
+                    required    //especifica que esse campo não pode estar vafio (retorna true or false)
                 />
 
-                <footer>
-                    <button type="submit">Publicar</button>
+                <footer>    
+                    {/*(disabled -> the button ficará indisponível enquanto o newCommentText(o que é digitado) estiver vazio */}
+                    <button 
+                        type="submit" 
+                        disabled={isNewCommentEmpty}> 
+                        Publicar
+                    </button>
                 </footer>
             </form>
 
